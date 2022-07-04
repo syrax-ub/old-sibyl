@@ -25,14 +25,14 @@ for load in to_load:
     if hasattr(imported, "help_plus") and imported.help_plus:
         HELP[imported.__plugin_name__.lower()] = imported 
 
-@System.on_message(ilters.command(["status", "sibyl"], prefixes=f"!"))
+@System.on_message(filters.command(["status", "sibyl"], prefixes=f"!"))
 async def status (client, message):
     if message.from_user.id in SIBYL:
          await System.send_message(message.chat.id, on_string)
     else:
          return
 
-@System.on_message(ilters.command(["help"], prefixes=f"!"))
+@System.on_message(filters.command(["help"], prefixes=f"!"))
 async def status (client, message): 
     if message.from_user.id in SIBYL:
          help_for = event.text.split(" ", 1)[1].lower()
