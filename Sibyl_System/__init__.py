@@ -49,11 +49,11 @@ if collection.count_documents({ '_id': 2}, limit = 1) == 0:
    dict["blacklisted_wlc"] = []
    collection.insert_one(dict)
 
-def system_cmd(pattern=None, allow_sibyl=True, allow_enforcer = False, **args):
-    if pattern:
-        args["pattern"] = re.compile(r"[\?\.!/]" + pattern)
+def system_cmd(command=None, allow_sibyl=True, allow_enforcer = False, **args):
+    if comm:
+        args["command"] = re.compile(r"[\?\.!/]" + pattern)
     if allow_sibyl and allow_enforcer:
         args["from_users"] = ENFORCERS
     else:
         args["from_users"] = SIBYL
-    return client.on_message(**args)
+    return filters.command(**args)
