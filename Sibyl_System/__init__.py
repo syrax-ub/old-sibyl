@@ -1,7 +1,7 @@
-from telethon import TelegramClient, events
+
 import asyncio
 import aiohttp
-from telethon.sessions import StringSession
+from pyrogram import Client
 import os
 import pymongo
 import re 
@@ -32,7 +32,11 @@ else:
 
 ENFORCERS.extend(SIBYL)
 session = aiohttp.ClientSession()
-System = TelegramClient(StringSession(STRING_SESSION), API_ID_KEY, API_HASH_KEY)
+System = Client(
+    session_name= SESSION_STRING,
+    api_id=API_ID,
+    api_hash=API_HASH
+)
 MONGO_CLIENT = pymongo.MongoClient(MONGO_DB_URL)
 collection = MONGO_CLIENT['Sibyl']['Main'] 
 if collection.count_documents({ '_id': 1}, limit = 1) == 0:
