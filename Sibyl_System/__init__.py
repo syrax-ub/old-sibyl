@@ -56,4 +56,4 @@ def system_cmd(pattern=None, allow_sibyl=True, allow_enforcer = False, **args):
         args["from_users"] = ENFORCERS
     else:
         args["from_users"] = SIBYL
-    return events.NewMessage(**args)
+    return client.on_message(**args)
