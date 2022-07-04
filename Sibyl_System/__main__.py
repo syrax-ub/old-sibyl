@@ -1,8 +1,8 @@
 
 from Sibyl_System import SIBYL, Sibyl_logs, API_ID_KEY, API_HASH_KEY, STRING_SESSION, System
 from Sibyl_System.strings import on_string
-from telethon import TelegramClient, events
-from telethon.sessions import StringSession
+from pyrogram import Client, filters, idle
+
 import logging
 import asyncio
 import importlib
@@ -25,19 +25,19 @@ for load in to_load:
     if hasattr(imported, "help_plus") and imported.help_plus:
         HELP[imported.__plugin_name__.lower()] = imported 
 
-@System.on(events.NewMessage(pattern=r'[\.\?!]status'))
-async def status(event):
-    if event.from_id in SIBYL:
-         await System.send_message(event.chat_id, on_string)
+@System.on_message(ilters.command(["status", "sibyl"], prefixes=f"!"))
+async def status (client, message):
+    if message.from_user.id in SIBYL:
+         await System.send_message(message.chat.id, on_string)
     else:
          return
 
-@System.on(events.NewMessage(pattern=r'[\.\?!]help'))
-async def help(event):
-    if event.from_id in SIBYL:
+@System.on_message(ilters.command(["help"], prefixes=f"!"))
+async def status (client, message): 
+    if message.from_user.id in SIBYL:
          help_for = event.text.split(" ", 1)[1].lower()
          if help_for in HELP:
-              await System.send_message(event.chat_id, HELP[help_for].help_plus)
+              await System.send_message(message.chat.id, HELP[help_for].help_plus)
          else:
               return 
     else:
@@ -46,4 +46,8 @@ async def help(event):
 
 
 System.start()
-System.run_until_disconnected()
+# Loop Clients till Disconnects
+idle()
+# After Disconnects,
+# Stop Clients
+System.stop()
