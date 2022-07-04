@@ -6,7 +6,7 @@ import re
 from Sibyl_System.plugins.Mongo_DB.message_blacklist import get_blacklist, update_blacklist
 from Sibyl_System.plugins.Mongo_DB.name_blacklist import get_wlc_bl, update_wlc_blacklist
 
-@System.on(system_cmd(pattern = r'addbl'))
+@System.on(system_cmd(command = r'addbl'))
 async def addbl(event):
      flag = re.match(".addbl -e (.*)", event.text, re.DOTALL)
      if flag:
@@ -23,20 +23,20 @@ async def addbl(event):
         await System.send_message(event.chat_id, f" {text} is already blacklisted") 
 
 @System.on(system_cmd(pattern=r'addwlcbl'))
-async def wlcbl(event):
-     flag = re.match(".addbl -e (.*)", event.text, re.DOTALL)
+async def wlcbl(client, message):
+     flag = re.match(".addbl -e (.*)", message.text, re.DOTALL)
      if flag:
         text = re.escape(flag.group(1))
      else:
        try:
-          text = event.text.split(" ", 1)[1]
+          text = message.text.split(" ", 1)[1]
        except:
          return 
      a = await update_wlc_blacklist(text, add = True)
      if a:
-        await System.send_message(event.chat_id, f"Added {text} to blacklist") 
+        await System.send_message(message.chat.id, f"Added {text} to blacklist") 
      else:
-        await System.send_message(event.chat_id, f" {text} is already blacklisted")
+        await System.send_message(message.chat.id, f" {text} is already blacklisted")
 
 @System.on(system_cmd(pattern=r'rmwlcbl'))
 async def rmwlcbl(event):
@@ -51,17 +51,17 @@ async def rmwlcbl(event):
         await System.send_message(event.chat_id, f"{text} is not blacklisted") 
 
 
-@System.on(system_cmd(pattern=r'rmbl'))
-async def rmbl(event):
+@System.on(system_cmd(command=r'rmbl'))
+async def rmbl(client, message):
      try:
-       text = event.text.split(" ", 1)[1]
+       text = message.text.split(" ", 1)[1]
      except:
        return 
      a = update_blacklist(text, add = False)
      if a:
-        await System.send_message(event.chat_id, f"Removed {text} from blacklist") 
+        await System.send_message(message.chat.id, f"Removed {text} from blacklist") 
      else:
-        await System.send_message(event.chat_id, f"{text} is not blacklisted") 
+        await System.send_message(message.chat.id, f"{text} is not blacklisted") 
 
 
 
