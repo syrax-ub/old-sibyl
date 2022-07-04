@@ -1,3 +1,4 @@
-telethon
+program
+tgcrypto
 aiohttp
 pymongo 
