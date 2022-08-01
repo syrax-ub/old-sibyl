@@ -1,4 +1,4 @@
-from telethon import events
+
 import asyncio
 import sys
 import re
@@ -9,9 +9,9 @@ import traceback
 #Thanks to stackoverflow for existing https://stackoverflow.com/questions/3906232/python-get-the-print-output-in-an-exec-statement
 
 
-@System.on(system_cmd(pattern = r"sibyl (exec|execute|x|ex)"))
+@System.on(system_cmd(command = r"sibyl (exec|execute|x|ex)"))
 async def run(event):
-  code = event.text.split(" ", 2)
+  code = message.text.split(" ", 2)
   if len(code) == 2: return
   stderr, output, wizardry = None, None, None
   code = code[2]
@@ -20,7 +20,7 @@ async def run(event):
   redirected_output = sys.stdout = StringIO()
   redirected_error = sys.stderr = StringIO()
   try:
-    await async_exec(code, event)
+    await async_exec(code, message)
   except Exception:
     wizardry = traceback.format_exc()
   output = redirected_output.getvalue()
@@ -31,15 +31,15 @@ async def run(event):
   elif output: final = "**Output**:\n`" + output
   elif stderr: final = "**Output**:\n`" + stderr
   else: final = "`OwO no output"
-  await System.send_message(event.chat_id, final + '`' )
+  await System.send_message(message.chat.id, final + '`' )
 
 
-async def async_exec(code, event):
+async def async_exec(code, message):
     exec(
-        f'async def __async_exec(event): ' +
+        f'async def __async_exec(message): ' +
         ''.join(f'\n {l}' for l in code.split('\n'))
     )
-    return await locals()['__async_exec'](event)
+    return await locals()['__async_exec'](message)
 
 
 __plugin_name__ = "exec"
